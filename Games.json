@@ -1,0 +1,10 @@
+{
+  "games": [
+    {
+      "name": "Puzzle Block",
+      "link": "puzzleblock.html",
+      "image": "puzzleblock.png",
+      "group": "Puzzle"
+    }
+  ]
+}
