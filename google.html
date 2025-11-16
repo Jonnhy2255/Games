@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Connexion Google - Win Brain Games</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 50px;
+  }
+  .google-btn {
+    background-color: #4285F4;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    margin: 5px;
+  }
+  .google-btn:hover {
+    background-color: #357ae8;
+  }
+  #userInfo {
+    margin-top: 20px;
+    font-size: 18px;
+  }
+</style>
+</head>
+<body>
+
+<h2>Connexion avec Google</h2>
+<button id="googleLogin" class="google-btn">Se connecter avec Google</button>
+<button id="googleLogout" class="google-btn">Déconnexion</button>
+<p id="userInfo"></p>
+
+<script type="module">
+  // Firebase SDK
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
+  import { getAuth, signInWithPopup, GoogleAuthProvider, signOut } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-analytics.js";
+
+  // Configuration Firebase
+  const firebaseConfig = {
+    apiKey: "AIzaSyAySdGu7AuSQeysLL0sb4J_x5EiJ5GMCp0",
+    authDomain: "win-brain-games.firebaseapp.com",
+    projectId: "win-brain-games",
+    storageBucket: "win-brain-games.firebasestorage.app",
+    messagingSenderId: "911672682767",
+    appId: "1:911672682767:web:901f66f051c7fde953767a",
+    measurementId: "G-RN7YSE4M3Y"
+  };
+
+  // Initialisation Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+  const auth = getAuth(app);
+  const provider = new GoogleAuthProvider();
+
+  const loginButton = document.getElementById("googleLogin");
+  const logoutButton = document.getElementById("googleLogout");
+  const userInfo = document.getElementById("userInfo");
+
+  // Connexion
+  loginButton.addEventListener("click", () => {
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        const user = result.user;
+        userInfo.textContent = `Connecté : ${user.displayName} (${user.email})`;
+        console.log("Utilisateur connecté :", user);
+      })
+      .catch((error) => {
+        console.error("Erreur Google Sign-In :", error);
+      });
+  });
+
+  // Déconnexion
+  logoutButton.addEventListener("click", () => {
+    signOut(auth)
+      .then(() => {
+        userInfo.textContent = "";
+        console.log("Utilisateur déconnecté");
+      })
+      .catch(console.error);
+  });
+
+  // Détecter l'utilisateur déjà connecté
+  auth.onAuthStateChanged((user) => {
+    if(user){
+      userInfo.textContent = `Connecté : ${user.displayName} (${user.email})`;
+    } else {
+      userInfo.textContent = "";
+    }
+  });
+</script>
+
+</body>
+</html>
